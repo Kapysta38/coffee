@@ -1,13 +1,14 @@
 import sqlite3
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5 import uic
+from main_ui import Ui_MainWindow
+from addEditCoffeeForm import Ui_MainWindow_2
 
 
-class MyWidget(QMainWindow):
+class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        self.setupUi(self)
         self.update_table()
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.setMouseTracking(True)
@@ -15,7 +16,7 @@ class MyWidget(QMainWindow):
         self.pushButton_2.clicked.connect(self.update_table_btn)
 
     def update_table(self):
-        con = sqlite3.connect('coffee.db')
+        con = sqlite3.connect('data\\coffee.db')
         result = con.execute(f"""SELECT * FROM coffee""").fetchall()
         self.tableWidget.setRowCount(len(result))
         for i, elem in enumerate(result):
@@ -30,12 +31,12 @@ class MyWidget(QMainWindow):
         self.update_table()
 
 
-class EditWin(QMainWindow):
+class EditWin(QMainWindow, Ui_MainWindow_2):
     def __init__(self, *args):
         super().__init__()
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.setWindowTitle('Редактирование')
-        self.con = sqlite3.connect('coffee.db')
+        self.con = sqlite3.connect('data\\coffee.db')
         self.value = 0
         self.pushButton.clicked.connect(self.save)
         self.pushButton_2.clicked.connect(self.create_row)
